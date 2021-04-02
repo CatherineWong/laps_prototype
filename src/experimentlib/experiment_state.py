@@ -1,7 +1,7 @@
 """
 experiment_state.py | Author : Catherine Wong
 
-Global experiment state object maintained throughout an experiment.
+Global experiment state objects maintained throughout an experiment.
 """
 import os
 import random
@@ -9,12 +9,11 @@ import logging
 import src.utilslib.utils as utils
 from src.configlib import constants as C
 
-
 class ExperimentState():
     def __init__(self):
         self.metadata = ExperimentMetadata()
-        self.experiment_data = None
-        self.experiment_models = [] # Array of models maintained by this experiment.
+        self.experiment_data = dict() 
+        self.experiment_models = dict() # Dict of models maintained by this experiment.
 
 class ExperimentMetadata():
     """ExperimentMetadata: maintains global experiment running metadata.

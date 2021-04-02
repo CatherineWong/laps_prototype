@@ -26,7 +26,6 @@ def check_file_exists_and_remove(path):
 #     # TODO
 #     pass
 
-
 def test_init_experiment_metadata_from_config():
     """Test that we can initialize metadata from a config file"""
     runner = ExperimentRunner(config_filename=DEFAULT_CONFIG_FILENAME)
