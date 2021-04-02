@@ -1,7 +1,8 @@
 """
 experiment_runner | Author : Catherine Wong
 
-Initializes and runs time-stamped experiments.
+Initializes and runs time-stamped Experiments. 
+ExperimentRunner maintains and updates an ExperimentState.
 Expects a config file.
 """
 import yaml
@@ -18,12 +19,12 @@ class ExperimentRunner():
         self.experiment_state = ExperimentState()
     
     def _load_config(self, config_filename):
-        # Loads a config file and sets the internal config object.
+        """Loads a YAML config file and sets the internal config object."""
         f = open(config_filename, 'r')
         return yaml.load(f, Loader=yaml.Loader)
         
     def init_experiment(self):
-        # Initializes an experiment.
+        """Initializes an ExperimentState."""
         self._init_experiment_metadata()
         # Initializes all of the data.
         # Initializes all of the models.
@@ -31,9 +32,8 @@ class ExperimentRunner():
         pass
     
     def _init_experiment_metadata(self):
-        """Initializes the experiment metadata."""
-        self.experiment_state.metadata.init_from_config(self.config)
-        # Create a top-level experiment directory based on the config experiment name
+        """Initializes the experiment metadata from a config."""
+        self.experiment_state.metadata.init_from_config(self.config)        
         self.experiment_state.metadata.log()
         
     def _init_experiment_data(self):
