@@ -6,7 +6,9 @@ ExperimentRunner maintains and updates an ExperimentState.
 Expects a config file.
 """
 import yaml
+from src.configlib import constants as C
 from src.experimentlib.experiment_state import ExperimentState
+from src.experimentlib.experiment_data import ExperimentDatasetRegistry
 
 class ExperimentRunner():
     """Top-level class for running experiments.
@@ -27,6 +29,7 @@ class ExperimentRunner():
         """Initializes an ExperimentState."""
         self._init_experiment_metadata()
         # Initializes all of the data.
+        self._init_experiment_data()
         # Initializes all of the models.
         # Initializes the top-level scheduler.
         pass
@@ -38,7 +41,16 @@ class ExperimentRunner():
         
     def _init_experiment_data(self):
         # Initializes the experiment data.
-        pass
+        assert C.EXPERIMENT_DATA in self.config
+        data_config = self.config[C.EXPERIMENT_DATA]
+        for dataset_config in data_config:
+            assert C.HANDLER in dataset_config
+            assert C.PARAMS in dataset_config
+            handler, params = dataset_config[C.HANDLER], dataset_config[C.PARAMS]
+            dataset =  ExperimentDatasetRegistry.get(handler, **params)
+            self.experiment_state.experiment_data.add_dataset(dataset)
+        # Checkpoint the datasets to start.
+        self.experiment_state.experiment_data.checkpoint_all()
     
     def _init_experiment_models(self):
         # Initializes the experiment models in the YAML file by passing them the config.

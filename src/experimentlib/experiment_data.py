@@ -10,12 +10,18 @@ class ExperimentData():
     """ExperimentData: a collection of all of the experiment datasets for a given experiment.
     """
     def __init__(self):
-        self._datasets = [] 
         self._datasets_by_id = {}
     
-    def add_dataset(dataset):
+    def add_dataset(self, dataset):
         """Adds a dataset to the internal dataset managers."""
-        pass
+        self._datasets_by_id[dataset.id] = dataset
+    
+    def get_by_id(self, id):
+        return self._datasets_by_id[id]
+    
+    def checkpoint_all(self):
+        for dataset_id in self._datasets_by_id:
+            self._datasets_by_id[dataset_id].checkpoint()
 
 # Global registry. Use ExperimentDatasetRegistry.register(KEY) to create new datasets.
 ExperimentDatasetRegistry = ClassRegistry()
@@ -23,10 +29,10 @@ class ExperimentDataset():
     """ExperimentDataset: base class for managing many different kinds of ExperimentData.
     Concrete datasets need to be registered using the ExperimentDatasetRegistry decorator.
     """
-    def __init__(self, dataset_id=None, dataset_type=None):
+    def __init__(self, id=None, dataset_type=None):
         assert dataset_type is not None
-        assert dataset_id is not None
-        self.dataset_id = dataset_id 
+        assert id is not None
+        self.id = id 
         self.dataset_type = dataset_type # Tag for what 'kind' of data it is
         
         self._datums_by_id = {}
@@ -34,6 +40,7 @@ class ExperimentDataset():
         self.ordering = None
         self.pointer = 0
         self.epoch = 0
+        self.batch = None
     
     def checkpoint(self, checkpoint_dir):
         # Run a model specific checkpointing function.
@@ -62,9 +69,14 @@ class ExperimentDataset():
         self.epoch = 0
     
     def get_batch(self, batch_size=None):
-        """Gets a batch with wraparound. Increments the epochs if you have wrapped around. Returns a set of IDs in sorted order for the given batch."""
+        """Gets a batch with wraparound. 
+        batch_size: if None, uses entire dataset.
+        sets: self.batch to the current batch.
+        Returns: [array of datum ids]
+        """
         assert self.ordering is not None
-        assert batch_size < len(self.ordering)
+        assert batch_size <= len(self.ordering)
+        if batch_size is None: batch_size = len(self.ordering)
         
         start = self.pointer
         end = self.pointer+batch_size
@@ -76,6 +88,7 @@ class ExperimentDataset():
             end = end - len(self.ordering)
             batch += self.ordering[start:end]
         self.pointer = end
+        self.batch = batch
         return batch
             
 class ExperimentDatum():

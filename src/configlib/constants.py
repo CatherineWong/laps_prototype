@@ -8,6 +8,10 @@ EXPERIMENT_METADATA = "metadata"
 EXPERIMENT_DATA = "data"
 EXPERIMENT_MODELS = "models"
 
+PARAMS = "params"
+HANDLER = "handler"
+
+
 ALL = "all"
 TRAIN = "train"
 TEST = "test"

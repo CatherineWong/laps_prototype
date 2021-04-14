@@ -11,6 +11,7 @@ import yaml
 
 import src.configlib.constants as C
 from src.experimentlib.experiment_runner import ExperimentRunner
+from tests.experimentlib.test_experiment_data import *
 
 DEFAULT_CONFIG_FILENAME = "configs/example_config.yaml"
 
@@ -21,11 +22,17 @@ def check_dir_exists_and_remove(path):
 def check_file_exists_and_remove(path):
     assert os.path.exists(path)
     os.remove(path)
-    
-# def test_init_experiment():
-#     # TODO
-#     pass
 
+def test_init_experiment_data_from_config():
+    """Test that we can initialize_dummy data from a config."""
+    runner = ExperimentRunner(config_filename=DEFAULT_CONFIG_FILENAME)
+    runner._init_experiment_data()
+    # Assert that the dataset is in there.
+    assert len(runner.experiment_state.experiment_data._datasets_by_id) == 1
+    dataset_id = TEST_ORDERED_DATASET_TAG
+    dataset = runner.experiment_state.experiment_data.get_by_id(TEST_ORDERED_DATASET_TAG)
+    assert dataset.id == TEST_ORDERED_DATASET_TAG
+    
 def test_init_experiment_metadata_from_config():
     """Test that we can initialize metadata from a config file"""
     runner = ExperimentRunner(config_filename=DEFAULT_CONFIG_FILENAME)
@@ -50,3 +57,4 @@ def test_init_experiment_metadata_from_config():
     check_dir_exists_and_remove(metadata.checkpoint_dir)
     # Check that we have a logfile and then clean it up
     check_file_exists_and_remove(metadata.log_file)
+

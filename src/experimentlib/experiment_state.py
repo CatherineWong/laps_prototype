@@ -8,11 +8,12 @@ import random
 import logging
 import src.utilslib.utils as utils
 from src.configlib import constants as C
+from src.experimentlib.experiment_data import ExperimentData
 
 class ExperimentState():
     def __init__(self):
         self.metadata = ExperimentMetadata()
-        self.experiment_data = dict() 
+        self.experiment_data = ExperimentData()
         self.experiment_models = dict() # Dict of models maintained by this experiment.
 
 class ExperimentMetadata():

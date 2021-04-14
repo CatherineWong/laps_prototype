@@ -14,150 +14,23 @@ metadata:
   debug: false 
   logging_verbosity: 10 # Logging level: use Python Logger.
 
-# data:
-#   # Inductive synthesis task specifications.
-#   - dataset_id: "task_inductive"
-#     dataset_type: "task"
-#     handler: "dreamcoder_tasks"
-#         params:
-#           domain : "logo"
-#           task_set : "logo_unlimited_200"
-#   # Language annotations for a synthesis task.
-#   - dataset_id : "task_language"
-#     dataset_type : "language"
-#     handler : "laps_language"
-#       params:
-#         domain: "logo"
-#         task_set : "logo_unlimited_200"
-#         data_dirs : 
-#           - "data/logo/language/logo_unlimited_200/synthetic"
-#   # Latent program annotations for 
-#   - dataset_id : "task_frontiers"
-#     dataset_type : "latent"
-#     handler : "dreamcoder_frontiers"
-#     params : 
-#       task_set : null
-# models:
-#   # Typed generative program prior
-#   - model : "generative_latent"
-#     class : "GenerativeLatent_TypedProgramGrammar" # Class name to initialize from registry
-#     init_fn:
-#       from_dsls:
-#         - domain: "drawing"
-#           primitive_set: "logo"
-#       from_checkpoint: null
-#     # Functions that generate from the model
-#     generate_fns: 
-#         # Unconditional sampling
-#         - name: "generate_samples" # Human readable name
-#           condition_on: null 
-#           params: null
-#           # TBD: any helmholtz parameters
-#         # Search from prior
-#         - name: "generate_for_tasks" 
-#           condition_on: 
-#           - data_type: "task"
-#               tags: 
-#                 - "all" # Reserved tag - runs for all tags
-#           params: null
-#     # Functions that update the model
-#     update_fns:
-#         # Default abstraction.
-#         - name: "update_for_latents"
-#           condition_on: 
-#           - data_type: "task"
-#             tags:
-#               - "all"
-#   # Language to Program model
-#   - model : "generative_language"
-#     class : "GenerativeLanguage_ProgramTranslationSimple"
-#     init_fn: null
-#     # Functions that generate from the model
-#     generate_fns:
-#       # Program-conditional language
-#       - name : "generate_for_latents"
-#         condition_on :
-#           - data_type : "latent"
-#             tags:
-#               - "all"
-#   # Amortized inference model
-#   - model : "amortized_latent"
-#     class : "AmortizedLatent_ProgramBigram"
-#     init_fn : null # TODO
-#       # Should be able to init from checkpoints
-#     generate_fns:
-#       # Program-language conditioned search.
-#       condition_on:
-#         - data_type: "task"
-#           tags:
-#             - "all"
-#         - data_type: "language"
-#           tags:
-#             - "all"
-    
-# experiment:
-    # TODO: we could ask the task dataset to control its own 'next'.
-#   # Search from the prior on training tasks
-#   - model: "generative_latent"
-#     fn: "generate"
-#     condition_on: 
-#       - data: "tasks"
-#         tags: 
-#           - "train"
-#     params:
-#       time_total_per_task: 1
-#       run_every : null # To run every
-#       stop_after : null # To switch 
-#   # Train the amortized conditional model to supervise
-#   - model: "amortized_latent"
-#     fn: "update"
-#     condition_on :
-#       - data : "tasks"
-#         tags: 
-#           - "train"
-#           - "generated"
-#       - data: "latent"
-#         tags:
-#           - "train"
-#           - "generated"
-#   # Search from the amortized conditional model
-#   - model : "amortized_latent"
-#     fn : "generate"
-#     condition_on: 
-#       - data: "tasks"
-#         tags: 
-#           - "train"
-#     params:
-#       time_total_per_task: 1 
-#   # Update the program prior on latent programs
-#   - model : "generative_latent"
-#     fn: "update"
-#     condition_on:
-#       - data: "latent"
-#         tags: 
-#           - "train"
-# 
-#   # Checkpoint training and test programs
-#   - data: "latent"
-#     fn : "checkpoint"
-#     tags:
-#       - "train"
-#       - "heldout" 
-#   # Checkpoint DSL
-#   - model : "generative_latent"
-#     fn: "checkpoint"
-#   # Checkpoint amortized model
-#   - model : "amortized_latent"
-#     fn : "checkpoint"
-# 
-#   # Heldout evaluation from the amortized conditional model
-#   - model : "amortized_latent"
-#     fn : "generate"
-#     condition_on: 
-#       - data: "tasks"
-#         tags: 
-#           - "heldout"
-#     params:
-#       time_total_per_task: 1 
-# 
-  
+data:
+  # Dummy dataset to demonstrate initialization.
+  - handler : "test_ordered"
+    params:
+      id : "test_ordered"
+      shuffle: false
+      num_to_initialize: 10
+      
+models:
+  # Dummy model to demonstrate initialization.
+  - handler : "test_generative"
+    params:
+      id : "test_generative"
+      
+experiment:
+  # Get a task batch.
+  - data: "test_ordered"
+    fn: "get_batch"
+    params:
+      batch_size: 10
