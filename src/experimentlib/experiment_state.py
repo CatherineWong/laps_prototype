@@ -20,7 +20,7 @@ class ExperimentMetadata():
     Expects initialization from a config.
     Accessible but should not be specific to Data or Models."""
     def __init__(self):
-        self.experiment_name = None
+        self.experiment_id = None
         self.seed = None # Random seed
         self.iteration = 0 # What iteration we are on
         self.end_iteration = 0
@@ -46,14 +46,14 @@ class ExperimentMetadata():
                 print(f"Unknown attribute: {k}")
                 assert False
             setattr(self, k, v)
-        assert self.experiment_name is not None
+        assert self.experiment_id is not None
         assert self.end_iteration >= self.iteration
         self._init_timestamped_checkpoint_and_logfile()
         self._init_logger()
     
     def _init_timestamped_checkpoint_and_logfile(self):
         """Initializes checkpoint and log files."""
-        timestamped_experiment_base = f"{self.experiment_name}_{self.timestamp}"
+        timestamped_experiment_base = f"{self.experiment_id}_{self.timestamp}"
         if self.new_timestamped_checkpoint_dir:
             assert self.checkpoint_dir is not None
             self.checkpoint_dir = os.path.join(self.checkpoint_dir, timestamped_experiment_base)
@@ -81,7 +81,7 @@ class ExperimentMetadata():
     def log(self):
         # Prints information about the config.
         logging.getLogger().info("[Metadata config]")
-        logging.getLogger().info(f"\texperiment_name: {self.experiment_name}")
+        logging.getLogger().info(f"\texperiment_id: {self.experiment_id}")
         logging.getLogger().info(f"\tcheckpoint_dir: {self.checkpoint_dir}")
         logging.getLogger().info(f"\tlog_file: {self.log_file}")
         logging.getLogger().info(f"\tseed: {self.seed}")

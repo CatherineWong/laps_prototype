@@ -32,7 +32,7 @@ class ExperimentRunner():
         pass
     
     def _init_experiment_metadata(self):
-        """Initializes the experiment metadata from a config."""
+        """Initializes the experiment metadata from the config."""
         self.experiment_state.metadata.init_from_config(self.config)        
         self.experiment_state.metadata.log()
         

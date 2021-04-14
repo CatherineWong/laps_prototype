@@ -44,7 +44,7 @@ def test_init_experiment_metadata_from_config():
             assert getattr(metadata, k) == v
     # Assert that we created a timestamped logfile and checkpoint
     for k in timestampeable_attributes:
-        timestamped_experiment_base = f"{metadata.experiment_name}_{metadata.timestamp}"
+        timestamped_experiment_base = f"{metadata.experiment_id}_{metadata.timestamp}"
         assert timestamped_experiment_base in getattr(metadata, k) 
     # Check that we have a checkpoint and then clean it up.
     check_dir_exists_and_remove(metadata.checkpoint_dir)

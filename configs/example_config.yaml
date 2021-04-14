@@ -1,37 +1,42 @@
 # Example YAML file demonstrating experiment config
 ---
 metadata:
-  experiment_name: "test_experiment"
+  experiment_id: "test_experiment"
+  seed: 0 # Random seed
   iteration: 0 # Initial iteration
   end_iteration: 1 # Iteration to end on
-  seed: 0 # Random seed
-  debug: false 
-  new_timestamped_log : true # Whether to write out a timestamped log
-  new_timestamped_checkpoint_dir : true # Whether to write checkpoints to a new dir
+  
+  new_timestamped_log : true 
+  new_timestamped_checkpoint_dir : true 
   log_dir : "results" # Top-level logging directory
   checkpoint_dir : "results" # Top-level checkpoint dir
-  logging_verbosity: 10 # Logging level
-  # TODO: where would a task batcher go?
-
-data:
-  # Synthesis task specifications.
-  - dataset_type: "task"
-    handler: "dreamcoder_tasks"
-        params:
-          domain : "drawing"
-          task_set : "logo_unlimited_200"
-          data_dir : "TBD"
-  - dataset_type : "language"
-    handler : "dreamcoder_language"
-      params:
-        domain: "drawing"
-        task_set : "logo_unlimited_200"
-        data_dir : "TBD"
-  - dataset_type : "latent"
-    handler : "dreamcoder_frontiers"
-    params : 
-      task_set : null
   
+  debug: false 
+  logging_verbosity: 10 # Logging level: use Python Logger.
+
+# data:
+#   # Inductive synthesis task specifications.
+#   - dataset_id: "task_inductive"
+#     dataset_type: "task"
+#     handler: "dreamcoder_tasks"
+#         params:
+#           domain : "logo"
+#           task_set : "logo_unlimited_200"
+#   # Language annotations for a synthesis task.
+#   - dataset_id : "task_language"
+#     dataset_type : "language"
+#     handler : "laps_language"
+#       params:
+#         domain: "logo"
+#         task_set : "logo_unlimited_200"
+#         data_dirs : 
+#           - "data/logo/language/logo_unlimited_200/synthetic"
+#   # Latent program annotations for 
+#   - dataset_id : "task_frontiers"
+#     dataset_type : "latent"
+#     handler : "dreamcoder_frontiers"
+#     params : 
+#       task_set : null
 # models:
 #   # Typed generative program prior
 #   - model : "generative_latent"
@@ -91,6 +96,7 @@ data:
 #             - "all"
     
 # experiment:
+    # TODO: we could ask the task dataset to control its own 'next'.
 #   # Search from the prior on training tasks
 #   - model: "generative_latent"
 #     fn: "generate"

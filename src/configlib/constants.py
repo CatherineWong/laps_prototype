@@ -8,4 +8,12 @@ EXPERIMENT_METADATA = "metadata"
 EXPERIMENT_DATA = "data"
 EXPERIMENT_MODELS = "models"
 
+ALL = "all"
+TRAIN = "train"
+TEST = "test"
+
+DATATYPE_LANGUAGE = "language"
+DATATYPE_TASK = "task"
+DATATYPE_LATENT = "latent"
+
 LOG_POSTFIX = ".log"
