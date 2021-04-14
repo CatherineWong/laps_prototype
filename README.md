@@ -29,7 +29,7 @@ Initializing the experiment:
 When initializing the `ExperimentMetadata` at the start of the experiment, the experiment will configure the following useful globally accessible functionalities:
 1. Checkpoint directory. All models and data should be able to checkpoint to a global checkpoint directory. This creates a timestamped checkpoint directory under `checkpoint_dir`.
 2. Logging file. All models and data should be able to log to a global log file. This creates a common logfile under `log_dir` and configures the global Python logger to output to both the IO stream and to the file. We use the Python `logging` library; `logging.getLogger` will now write out to both.
-3. 
+
 > dev: all experiment running functionality is located in `src/experimentlib`.
 >
 > dev: all tests use pytest. Exampple: `python -m pytest tests/experimentlib/test_experiment_runner.py`
