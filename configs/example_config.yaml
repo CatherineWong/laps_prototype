@@ -38,4 +38,11 @@ experiment:
   
   # Evaluate the model.
   
-  # Checkpoint the model.
+  # Checkpoint everything.
+  - checkpoint:
+      metadata: 
+        - all
+      data : 
+        - all
+      models : 
+        - all

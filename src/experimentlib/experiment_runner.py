@@ -32,8 +32,7 @@ class ExperimentRunner():
         # Initializes all of the data.
         self._init_experiment_data()
         # Initializes all of the models.
-        # Initializes the top-level scheduler.
-        pass
+        self._init_experiment_models()
     
     def _init_experiment_metadata(self):
         """Initializes the experiment metadata from the config."""
@@ -64,4 +63,25 @@ class ExperimentRunner():
     
     def run_iteration(self):
         # Runs an iteration of the experiment.
-        pass
+        assert C.EXPERIMENT in self.config
+        experiment_blocks = self.config[C.EXPERIMENT]
+        for block in experiment_blocks:
+            if C.EXPERIMENT_DATA in block:
+                # Run a function on the experiment data.
+                dataset_id = block[C.EXPERIMENT_DATA]
+                dataset = self.experiment_state.experiment_data.get_by_id(dataset_id)
+                dataset_fn = getattr(dataset, block[C.FN])
+                dataset_fn(**block[C.PARAMS])
+            elif C.EXPERIMENT_MODELS in block:
+                # Run a model function.
+                model_id = block[C.MODELS]
+                model = self.experiment_state.experiment_models.get_bget_by_id(model_id)
+                model_fn = getattr(model, block[C.FN])
+                model_fn(state=self.experiment_state, **block[C.PARAMS])
+            elif C.CHECKPOINT in block:
+                # Checkpoint any of the data.
+                pass
+            else:
+                raise RuntimeError('Unknown experiment block type.')
+        
+        self.experiment_state.metadata.iteration += 1

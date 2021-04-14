@@ -24,6 +24,13 @@ def check_file_exists_and_remove(path):
     assert os.path.exists(path)
     os.remove(path)
 
+def test_init_experiment():
+    runner = ExperimentRunner(config_filename=DEFAULT_CONFIG_FILENAME)
+    runner.init_experiment()
+    assert runner.experiment_state.metadata.iteration == 0
+    assert len(runner.experiment_state.experiment_data._datasets_by_id)
+    assert len(runner.experiment_state.experiment_models._models_by_id) == 1
+    
 def test_init_experiment_data_from_config():
     """Test that we can initialize_dummy data from a config."""
     runner = ExperimentRunner(config_filename=DEFAULT_CONFIG_FILENAME)
@@ -67,3 +74,13 @@ def test_init_experiment_metadata_from_config():
     # Check that we have a logfile and then clean it up
     check_file_exists_and_remove(metadata.log_file)
 
+def test_run_iteration():
+    runner = ExperimentRunner(config_filename=DEFAULT_CONFIG_FILENAME)
+    runner.init_experiment()
+    runner.run_iteration()
+    assert runner.experiment_state.metadata.iteration == 1
+    
+    # Test that we got a batch of data
+    dataset =  runner.experiment_state.experiment_data.get_by_id(TEST_ORDERED_DATASET_TAG)
+    assert dataset.batch is not None
+    assert dataset.batch == list(range(10))
