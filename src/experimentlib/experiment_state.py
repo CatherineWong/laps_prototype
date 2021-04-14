@@ -9,12 +9,13 @@ import logging
 import src.utilslib.utils as utils
 from src.configlib import constants as C
 from src.experimentlib.experiment_data import ExperimentData
+from src.experimentlib.experiment_models import ExperimentModels
 
 class ExperimentState():
     def __init__(self):
         self.metadata = ExperimentMetadata()
         self.experiment_data = ExperimentData()
-        self.experiment_models = dict() # Dict of models maintained by this experiment.
+        self.experiment_models = ExperimentModels()
 
 class ExperimentMetadata():
     """ExperimentMetadata: maintains global experiment running metadata.

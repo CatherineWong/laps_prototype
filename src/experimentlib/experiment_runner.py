@@ -9,6 +9,7 @@ import yaml
 from src.configlib import constants as C
 from src.experimentlib.experiment_state import ExperimentState
 from src.experimentlib.experiment_data import ExperimentDatasetRegistry
+from src.experimentlib.experiment_models import ExperimentModelRegistry
 
 class ExperimentRunner():
     """Top-level class for running experiments.
@@ -49,12 +50,17 @@ class ExperimentRunner():
             handler, params = dataset_config[C.HANDLER], dataset_config[C.PARAMS]
             dataset =  ExperimentDatasetRegistry.get(handler, **params)
             self.experiment_state.experiment_data.add_dataset(dataset)
-        # Checkpoint the datasets to start.
-        self.experiment_state.experiment_data.checkpoint_all()
     
     def _init_experiment_models(self):
-        # Initializes the experiment models in the YAML file by passing them the config.
-        pass
+        # Initializes the experiment models in the YAML file by passing them the config. Passes in the current experimental state.
+        assert C.EXPERIMENT_MODELS in self.config
+        models_config = self.config[C.EXPERIMENT_MODELS]
+        for model_config in models_config:
+            assert C.HANDLER in model_config
+            assert C.PARAMS in model_config
+            handler, params = model_config[C.HANDLER], model_config[C.PARAMS]
+            model = ExperimentModelRegistry.get(handler, state=self.experiment_state, **params)
+            self.experiment_state.experiment_models.add_model(model)
     
     def run_iteration(self):
         # Runs an iteration of the experiment.

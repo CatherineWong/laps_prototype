@@ -12,7 +12,6 @@ class ExperimentModels():
     
     def add_model(self, model):
         """Adds a model to the internal model manager."""
-        assert type(model) == ExperimentModel
         self._models_by_id[model.id] = model
     
     def get_by_id(self, id):

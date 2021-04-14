@@ -24,13 +24,18 @@ data:
       
 models:
   # Dummy model to demonstrate initialization.
-  - handler : "test_generative"
+  - handler : "test_model"
     params:
-      id : "test_generative"
+      id : "test_model"
       
 experiment:
-  # Get a task batch.
+  # Increment the task batch.
   - data: "test_ordered"
     fn: "get_batch"
     params:
       batch_size: 10
+  # Update the model with the task batch.
+  
+  # Evaluate the model.
+  
+  # Checkpoint the model.

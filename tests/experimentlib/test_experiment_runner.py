@@ -12,6 +12,7 @@ import yaml
 import src.configlib.constants as C
 from src.experimentlib.experiment_runner import ExperimentRunner
 from tests.experimentlib.test_experiment_data import *
+from tests.experimentlib.test_experiment_models import *
 
 DEFAULT_CONFIG_FILENAME = "configs/example_config.yaml"
 
@@ -32,7 +33,15 @@ def test_init_experiment_data_from_config():
     dataset_id = TEST_ORDERED_DATASET_TAG
     dataset = runner.experiment_state.experiment_data.get_by_id(TEST_ORDERED_DATASET_TAG)
     assert dataset.id == TEST_ORDERED_DATASET_TAG
-    
+
+def test_init_experiment_models_from_config():
+    runner = ExperimentRunner(config_filename=DEFAULT_CONFIG_FILENAME)
+    runner._init_experiment_models()
+    # Assert that we've initialized a model.
+    assert len(runner.experiment_state.experiment_models._models_by_id) == 1
+    model = runner.experiment_state.experiment_models.get_by_id(TEST_MODEL)
+    assert model.id == TEST_MODEL
+
 def test_init_experiment_metadata_from_config():
     """Test that we can initialize metadata from a config file"""
     runner = ExperimentRunner(config_filename=DEFAULT_CONFIG_FILENAME)
