@@ -44,14 +44,19 @@ Creating a new dataset that can be loaded from the config requires:
 > dev: the base dataset functionality is located in `src/experimentlib/experiment_data.py`. However, specific kinds of datasets are managed by specific libraries based on their data type, such as `languagelib` and `programlib`.
 1. [TODO] Test the adding, initialization, and batching functionalities.
 2. [TODO] Configure the global experiment runner datastore and test the functionality of initializing it.
-3. [TODO] Configure task loading and batching so that we can run a full experiment with batching and checkpointing (e.g not checkpointing so often or just checkpointing with a log.)
-5. [TODO] Rename lapslib -> languagelib.
+3. [TODO] Configure task loading and batching so that we can run a full experiment with batching and checkpointing (e.g not checkpointing so often or just checkpointing with a log.) Verify an experiment runner in 'experiment' where we repeatedly get a batch of data.
+5. [TODO] Rename lapslib -> languagelib and verify language loading. THEN: see create dummy model.
+6. [TODO] Finally, implement programlib and verify task loading (of image tasks); and programs from the frontiers (just load the programs as frontiers or ground truth annotations -- we can write them out as a different kind of taskv or separate from the frontiers.)
 
 ### Experiment Models
-Experiment models of any kind (generative, discriminative) are derived from the 
+Experiment models of any kind (generative, discriminative) are derived from the ExperimentModel class.
+
+TODO: create a dummy model and verify registry, initialization, data access, and checkpointing with the language data.
+Write very silly no train and sampling functions. 
 
 ### Experiment
-Experiments iterate over a series of function calls to either the ExperimentDataset or ExperimentModel 
+Experiments iterate over a series of function calls to either the ExperimentDataset or ExperimentModel.
+
 
 
 
