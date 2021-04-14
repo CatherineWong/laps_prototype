@@ -42,7 +42,7 @@ Creating a new dataset that can be loaded from the config requires:
 2. Registering the experiment dataset to the global `ExperimentDataRegistry` in `experimentlib\experiment_data`. This allows the experiment runner to import the experiments from the store. See the test for an example.
 
 > dev: the base dataset functionality is located in `src/experimentlib/experiment_data.py`. However, specific kinds of datasets are managed by specific libraries based on their data type, such as `languagelib` and `programlib`.
-1. [TODO] Change dataset to have a data ID.
+1. [TODO] Test the adding, initialization, and batching functionalities.
 2. [TODO] Configure the global experiment runner datastore and test the functionality of initializing it.
 3. [TODO] Configure task loading and batching so that we can run a full experiment with batching and checkpointing (e.g not checkpointing so often or just checkpointing with a log.)
 5. [TODO] Rename lapslib -> languagelib.
