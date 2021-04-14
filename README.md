@@ -31,14 +31,21 @@ When initializing the `ExperimentMetadata` at the start of the experiment, the e
 2. Logging file. All models and data should be able to log to a global log file. This creates a common logfile under `log_dir` and configures the global Python logger to output to both the IO stream and to the file. We use the Python `logging` library; `logging.getLogger` will now write out to both.
 
 > dev: all experiment running functionality is located in `src/experimentlib`.
->
+> 
 > dev: all tests use pytest. Exampple: `python -m pytest tests/experimentlib/test_experiment_runner.py`
 
-DEV TODOS:
-- Change the experiment name to experiment ID.
 ### Experiment Data
-Experiment data of any kind (tasks, language annotations, synthesized programs) are derived from the 
-1. [TODO] Change data to have a data ID.
+Experiment data of any kind (tasks, language annotations, synthesized programs) are `ExperimentDataset`s. 
+The Experiment maintains an `ExperimentData` collection of all of its `ExperimentDataset`s, which can be accessed by any experimental block.
+Creating a new dataset that can be loaded from the config requires:
+1. Implementing a subclass of `ExperimentDataset`.
+2. Registering the experiment dataset to the global `ExperimentDataRegistry` in `experimentlib\experiment_data`. This allows the experiment runner to import the experiments from the store. See the test for an example.
+
+> dev: the base dataset functionality is located in `src/experimentlib/experiment_data.py`. However, specific kinds of datasets are managed by specific libraries based on their data type, such as `languagelib` and `programlib`.
+1. [TODO] Change dataset to have a data ID.
+2. [TODO] Configure the global experiment runner datastore and test the functionality of initializing it.
+3. [TODO] Configure task loading and batching so that we can run a full experiment with batching and checkpointing (e.g not checkpointing so often or just checkpointing with a log.)
+5. [TODO] Rename lapslib -> languagelib.
 
 ### Experiment Models
 Experiment models of any kind (generative, discriminative) are derived from the 
