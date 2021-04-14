@@ -1,62 +1,45 @@
->📋  A template README.md for code accompanying a Machine Learning paper
 
-# My Paper Title
+# Task Learning Library
+This repository contains a library with a basic starting framework for running task-based learning experiments. It is especially well-suited for program learning models.
+It is currently under development; this file also tracks outstanding implementational features.
 
-This repository is the official implementation of [My Paper Title](https://arxiv.org/abs/2030.12345). 
+## Running and Configuring Experiments
+To run an experiment with this library, you need two basic ingredients:
+1. A `config` file that determines all of the experimental parameters.
+2. An executable `.py` file that launches an experiment from the config.
 
->📋  Optional: include a graphic explaining your approach/main result, bibtex entry, link to demos, blog posts and tutorials
+### Configuration Files
+To configure all experimental parameters, you will need a `config` file with these basic parts. See `configs\example_config.yaml` for an example.
+1. `metadata`: all experimental metadata that should persist across every iteration and should be accessible to all experimental blocks in each iteration.
+2. `data`: all experimental data maintained throughout the experiment. This includes datasets, but also is a writable store of data that models can access during an experiment.
+3. `models`: all models that need to be initialized for the experiment. Models control the experimental functions that will be called to actually run an experiment.
+4. `experiment`: all experimental blocks that will be iterated over at each iteration. This calls task datasets (which can update based on the iteration) or models that can mutate and access the experimental data.
+Together, these configuration parameters configure and fully define a runnable experiment.
 
-## Requirements
+## Experiments
+Experiments use the configuration file to initialize and manage the experiments. These configure the following parts of the experiment.
 
-To install requirements:
+### Experiment Initialization
+Experiments are initialized, managed, and run by an `ExperimentRunner`, which maintains a global `ExperimentState` throughout the experiment. 
+Initializing the experiment:
+1. Initializes and configures the metadata. This sets up the persistent global parameters including the checkpoint directory and logger.
+2. Initializes and configures the data. This loads all of the initial datasets or data types specified by the config.
+3. Initializes and configures the models. This initializes all of the models defined by the config.
 
-```setup
-pip install -r requirements.txt
-```
+When initializing the `ExperimentMetadata` at the start of the experiment, the experiment will configure the following useful globally accessible functionalities:
+1. [TODO] Change experiment name to experimetn name
 
->📋  Describe how to set up the environment, e.g. pip/conda/docker commands, download datasets, etc...
+> dev: all experiment running functionality is located in `src/experimentlib`.
+> dev: all tests use pytest. Exampple: `python -m pytest tests/experimentlib/test_experiment_runner.py`
+### Experiment Data
+Experiment data of any kind (tasks, language annotations, synthesized programs) are derived from the 
+1. [TODO] Change data to have a data ID.
 
-## Training
+### Experiment Models
+Experiment models of any kind (generative, discriminative) are derived from the 
 
-To train the model(s) in the paper, run this command:
-
-```train
-python train.py --input-data <path_to_data> --alpha 10 --beta 20
-```
-
->📋  Describe how to train the models, with example commands on how to train the models in your paper, including the full training procedure and appropriate hyperparameters.
-
-## Evaluation
-
-To evaluate my model on ImageNet, run:
-
-```eval
-python eval.py --model-file mymodel.pth --benchmark imagenet
-```
-
->📋  Describe how to evaluate the trained models on benchmarks reported in the paper, give commands that produce the results (section below).
-
-## Pre-trained Models
-
-You can download pretrained models here:
-
-- [My awesome model](https://drive.google.com/mymodel.pth) trained on ImageNet using parameters x,y,z. 
-
->📋  Give a link to where/how the pretrained models can be downloaded and how they were trained (if applicable).  Alternatively you can have an additional column in your results table with a link to the models.
-
-## Results
-
-Our model achieves the following performance on :
-
-### [Image Classification on ImageNet](https://paperswithcode.com/sota/image-classification-on-imagenet)
-
-| Model name         | Top 1 Accuracy  | Top 5 Accuracy |
-| ------------------ |---------------- | -------------- |
-| My awesome model   |     85%         |      95%       |
-
->📋  Include a table of results from your paper, and link back to the leaderboard for clarity and context. If your main result is a figure, include that figure and link to the command or notebook to reproduce it. 
+### Experiment
+Experiments iterate over a series of function calls to either the ExperimentDataset or ExperimentModel 
 
 
-## Contributing
 
->📋  Pick a licence and describe how to contribute to your code repository. 
