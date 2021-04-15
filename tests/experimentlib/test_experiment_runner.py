@@ -4,7 +4,7 @@ test_experiment_runner.py | Author : Catherine Wong
 Test for the experiment runner class which initializes experiments from a config and runs them.
 
 From root:
-python -m pytest tests/test_experiment_runner.py
+python -m pytest tests/test_experiment_runner.py 
 """
 import os
 import yaml
