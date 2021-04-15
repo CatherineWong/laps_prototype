@@ -1,0 +1,46 @@
+# Example YAML file demonstrating language usage.
+---
+metadata:
+  experiment_id: "demo_language_experiment"
+  seed: 0 # Random seed
+  iteration: 0 # Initial iteration
+  end_iteration: 1 # Iteration to end on
+  
+  new_timestamped_log : true 
+  new_timestamped_checkpoint_dir : true 
+  log_dir : "results" # Top-level logging directory
+  checkpoint_dir : "results" # Top-level checkpoint dir
+  
+  debug: false 
+  logging_verbosity: 10 # Logging level: use Python Logger.
+
+data:
+  # Demonstrate initialization of a language train and test dataset.
+  - handler : "json_language_dataset"
+    params:
+      id : "train"
+      shuffle: false
+      input_dirs: 
+        - "data/logo/language/logo_unlimited_200/human/train"
+  - handler : "json_language_dataset"
+    params:
+      id : "test"
+      shuffle: false
+      input_dirs: 
+        - "data/logo/language/logo_unlimited_200/human/train"
+# 
+# models:
+#   # Dummy model to demonstrate initialization.
+#   - handler : "test_model"
+#     params:
+#       id : "test_model"
+# 
+experiment:
+  # Checkpoint everything.
+  - checkpoint:
+      metadata: 
+        - iteration
+      data : 
+        - all
+      models : 
+        - all

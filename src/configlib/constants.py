@@ -21,9 +21,10 @@ ALL = "all"
 TRAIN = "train"
 TEST = "test"
 
-DATATYPE_LANGUAGE = "language"
-DATATYPE_TASK = "task"
-DATATYPE_LATENT = "latent"
+# Common dataset types
+DATASET_TYPE_LANGUAGE = "language"
+DATASET_TYPE_TASK = "task"
+DATASET_TYPE_LATENT = "latent"
 
 LOG_POSTFIX = ".log"
 CHECKPOINT = "checkpoint"

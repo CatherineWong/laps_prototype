@@ -5,8 +5,6 @@ Demo general purpose entrypoint for running model-based experiments.
 Data should be defined in the data directory.
 Experiments should be defined via config files.
 Main needs to import any models and data for the registry.
-
-By convention: put launcher scripts for experiments in bin/*
 """
 from src.experimentlib.experiment_runner import ExperimentRunner
 
