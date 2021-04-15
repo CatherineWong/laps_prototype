@@ -28,6 +28,14 @@ data:
       shuffle: false
       input_dirs: 
         - "data/logo/language/logo_unlimited_200/human/train"
+  # Demonstrate initialization of a task dataset.
+  - handler : "inductive_task_dataset"
+    params:
+      id : "train"
+      shuffle: false
+      input_dirs:
+        - "data/logo/tasks/logo_unlimited_200/train"
+      input_type: "pickle"
 # 
 # models:
 #   # Dummy model to demonstrate initialization.

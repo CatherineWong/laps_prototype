@@ -1,3 +1,6 @@
 *.pyc
 results
 data
+
+# Temporary, until we can install it as a submodule.
+dreamcoder
