@@ -4,7 +4,9 @@ Base class for handling and logging Experiment Data objects.
 Maintains a registry that can be used to integrate diverse kinds of 'data'.
 """
 import random
+from collections import defaultdict
 from class_registry import ClassRegistry
+from src.configlib import constants as C
 
 class ExperimentData():
     """ExperimentData: a collection of all of the experiment datasets for a given experiment.
@@ -19,14 +21,19 @@ class ExperimentData():
     def get_by_id(self, id):
         return self._datasets_by_id[id]
     
-    def checkpoint_all(self):
-        for dataset_id in self._datasets_by_id:
-            self._datasets_by_id[dataset_id].checkpoint()
+    def checkpoint(self, to_checkpoint, state):
+        """to_checkpoint: array of IDs to checkpoint.
+            state: experiment_state
+        """
+        for id in self._datasets_by_id:
+            if id in to_checkpoint or C.ALL in to_checkpoint:
+                self._datasets_by_id[id].checkpoint(state)
 
 # Global registry. Use ExperimentDatasetRegistry.register(KEY) to create new datasets.
 ExperimentDatasetRegistry = ClassRegistry()
 class ExperimentDataset():
     """ExperimentDataset: base class for managing many different kinds of ExperimentData.
+    Datums maintain an array of [tags]: strings that can be used to order and slice specific sets of data.
     Concrete datasets need to be registered using the ExperimentDatasetRegistry decorator.
     """
     def __init__(self, id=None, dataset_type=None):
@@ -35,16 +42,22 @@ class ExperimentDataset():
         self.id = id 
         self.dataset_type = dataset_type # Tag for what 'kind' of data it is
         
-        self._datums_by_id = {}
+        self._datums_by_id = {} 
         
         self.ordering = None
         self.pointer = 0
         self.epoch = 0
         self.batch = None
     
-    def checkpoint(self, checkpoint_dir):
-        # Run a model specific checkpointing function.
+    def checkpoint(self, state=None):
+        # Run a model specific checkpointing function. Will be passed the model state.
         raise RuntimeError('Not implemented: checkpointing function.')
+    
+    def size(self):
+        return len(self._datums_by_id)
+    
+    def get_by_id(self, datum_id):
+        return self._datums_by_id[datum_id]
         
     def add(self, datum):
         """Adds a datum. Note that if there is an existing ordering, this will fail, because it is not well defined."""
@@ -52,9 +65,6 @@ class ExperimentDataset():
         assert datum.dataset_type == self.dataset_type or datum.dataset_type is None
         datum.dataset_type = self.dataset_type
         self._datums_by_id[datum.id] = datum
-    
-    def get_by_id(self, datum_id):
-        return self._datums_by_id[datum_id]
     
     def initialize_ordering(self, shuffle=False, from_ordering=None):
         """Initialize ordering over the dataset by IDs.

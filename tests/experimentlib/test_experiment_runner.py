@@ -19,7 +19,7 @@ DEFAULT_CONFIG_FILENAME = "configs/example_config.yaml"
 def check_dir_exists_and_remove(path):
     assert os.path.exists(path)
     os.rmdir(path)
-    
+
 def check_file_exists_and_remove(path):
     assert os.path.exists(path)
     os.remove(path)
@@ -30,16 +30,15 @@ def test_init_experiment():
     assert runner.experiment_state.metadata.iteration == 0
     assert len(runner.experiment_state.experiment_data._datasets_by_id)
     assert len(runner.experiment_state.experiment_models._models_by_id) == 1
-    
+
 def test_init_experiment_data_from_config():
     """Test that we can initialize_dummy data from a config."""
     runner = ExperimentRunner(config_filename=DEFAULT_CONFIG_FILENAME)
     runner._init_experiment_data()
-    # Assert that the dataset is in there.
-    assert len(runner.experiment_state.experiment_data._datasets_by_id) == 1
-    dataset_id = TEST_ORDERED_DATASET_TAG
-    dataset = runner.experiment_state.experiment_data.get_by_id(TEST_ORDERED_DATASET_TAG)
-    assert dataset.id == TEST_ORDERED_DATASET_TAG
+    # Assert that the datasets are in there.
+    assert len(runner.experiment_state.experiment_data._datasets_by_id) == 2
+    dataset = runner.experiment_state.experiment_data.get_by_id(C.TRAIN)
+    assert dataset.id == C.TRAIN
 
 def test_init_experiment_models_from_config():
     runner = ExperimentRunner(config_filename=DEFAULT_CONFIG_FILENAME)
@@ -54,7 +53,7 @@ def test_init_experiment_metadata_from_config():
     runner = ExperimentRunner(config_filename=DEFAULT_CONFIG_FILENAME)
     runner._init_experiment_metadata()
     metadata = runner.experiment_state.metadata
-    
+
     timestampeable_attributes = [
         'checkpoint_dir', 'log_file'
     ]
@@ -77,10 +76,20 @@ def test_init_experiment_metadata_from_config():
 def test_run_iteration():
     runner = ExperimentRunner(config_filename=DEFAULT_CONFIG_FILENAME)
     runner.init_experiment()
-    runner.run_iteration()
-    assert runner.experiment_state.metadata.iteration == 1
-    
-    # Test that we got a batch of data
-    dataset =  runner.experiment_state.experiment_data.get_by_id(TEST_ORDERED_DATASET_TAG)
-    assert dataset.batch is not None
-    assert dataset.batch == list(range(10))
+    for iter_idx in range(2):
+        runner.run_iteration()
+        assert runner.experiment_state.metadata.iteration == iter_idx + 1
+        
+        # Test that we got a batch of data and have a test dataset.
+        train_dataset = runner.experiment_state.experiment_data.get_by_id(C.TRAIN)
+        assert train_dataset.batch is not None
+        assert train_dataset.batch == list(range(10))
+        
+        test_dataset = runner.experiment_state.experiment_data.get_by_id(C.TEST)
+        assert test_dataset.batch is None
+        assert test_dataset.ordering == list(range(5))
+        # Test that we updated the model. The data are equivalent to the indices.
+        model = runner.experiment_state.experiment_models.get_by_id(TEST_MODEL)
+        assert model.data == train_dataset.batch
+        # Test that we ran the model loss function.
+        assert model.loss == dummy_loss_fn(test_dataset.ordering)

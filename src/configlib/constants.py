@@ -10,6 +10,8 @@ EXPERIMENT_MODELS = "models"
 EXPERIMENT = "experiment"
 
 # Initialization configs.
+ID = "id"
+BATCH = "batch"
 PARAMS = "params"
 HANDLER = "handler"
 FN = "fn"

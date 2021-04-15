@@ -80,6 +80,15 @@ class ExperimentMetadata():
         if self.seed is not None:
             random.seed(self.seed)
     
+    def checkpoint(self, to_checkpoint, state):
+        """to_checkpoint: array of attributes to checkpoint or all for all
+           state: the experiment state
+        """
+        logging.getLogger().info("[Checkpoint metadata]")
+        for attr in self.__dict__:
+            if attr in to_checkpoint or C.ALL in to_checkpoint:
+                logging.getLogger().info(f"\t{attr}: {self.__dict__[attr]}")
+    
     def log(self):
         # Prints information about the config.
         logging.getLogger().info("[Metadata config]")

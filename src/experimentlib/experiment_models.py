@@ -3,7 +3,9 @@ experiment_models | Author : Catherine Wong.
 Base class for handling Experiment Model objects.
 Maintains a registry that can be used to integrate diverse 'models'.
 """
+
 from class_registry import ClassRegistry
+from src.configlib import constants as C
 
 class ExperimentModels():
     """ExperimentModels: a collection of all of the experiment models for a given experiment."""
@@ -17,9 +19,13 @@ class ExperimentModels():
     def get_by_id(self, id):
         return self._models_by_id[id]
     
-    def checkpoint_all(self):
-        for dataset_id in self._datasets_by_id:
-            self._datasets_by_id[dataset_id].checkpoint()
+    def checkpoint(self, to_checkpoint, state):
+        """to_checkpoint: array of IDs to checkpoint.
+            state: experiment_state
+        """
+        for id in self._models_by_id:
+            if id in to_checkpoint or C.ALL in to_checkpoint:
+                self._models_by_id[id].checkpoint(state)
 
 # Global registry. Use ExperimentModelRegistry.register(KEY) to create new datasets.
 ExperimentModelRegistry = ClassRegistry()
@@ -33,6 +39,6 @@ class ExperimentModel():
         assert id is not None
         self.id = id
     
-    def checkpoint(self, checkpoint_dir):
+    def checkpoint(self, state=None):
         # Run a model specific checkpointing function.
         raise RuntimeError('Not implemented: checkpointing function.')

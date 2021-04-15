@@ -18,9 +18,14 @@ data:
   # Dummy dataset to demonstrate initialization.
   - handler : "test_ordered"
     params:
-      id : "test_ordered"
+      id : "train"
       shuffle: false
       num_to_initialize: 10
+  - handler : "test_ordered"
+    params:
+      id : "test"
+      shuffle: false
+      num_to_initialize: 5
       
 models:
   # Dummy model to demonstrate initialization.
@@ -30,18 +35,28 @@ models:
       
 experiment:
   # Increment the task batch.
-  - data: "test_ordered"
+  - data: "train"
     fn: "get_batch"
     params:
       batch_size: 10
   # Update the model with the task batch.
-  
-  # Evaluate the model.
-  
+  - models: "test_model"
+    fn : "update"
+    params:
+      data: 
+        - id: "train"
+          batch: true
+  # Evaluate the model on heldout data
+  - models: "test_model"
+    fn: "evaluate_loss"
+    params:
+      data:
+        - id: "test"
+
   # Checkpoint everything.
   - checkpoint:
       metadata: 
-        - all
+        - iteration
       data : 
         - all
       models : 

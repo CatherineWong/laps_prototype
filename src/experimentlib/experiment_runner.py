@@ -5,6 +5,7 @@ Initializes and runs time-stamped Experiments.
 ExperimentRunner maintains and updates an ExperimentState.
 Expects a config file.
 """
+import logging
 import yaml
 from src.configlib import constants as C
 from src.experimentlib.experiment_state import ExperimentState
@@ -74,13 +75,19 @@ class ExperimentRunner():
                 dataset_fn(**block[C.PARAMS])
             elif C.EXPERIMENT_MODELS in block:
                 # Run a model function.
-                model_id = block[C.MODELS]
-                model = self.experiment_state.experiment_models.get_bget_by_id(model_id)
+                model_id = block[C.EXPERIMENT_MODELS]
+                model = self.experiment_state.experiment_models.get_by_id(model_id)
                 model_fn = getattr(model, block[C.FN])
                 model_fn(state=self.experiment_state, **block[C.PARAMS])
             elif C.CHECKPOINT in block:
-                # Checkpoint any of the data.
-                pass
+                checkpoint_block =  block[C.CHECKPOINT]
+                if C.EXPERIMENT_METADATA in checkpoint_block:
+                    self.experiment_state.metadata.checkpoint(checkpoint_block[C.EXPERIMENT_METADATA], self.experiment_state)
+                if C.EXPERIMENT_DATA in checkpoint_block:
+                    self.experiment_state.experiment_data.checkpoint(checkpoint_block[C.EXPERIMENT_DATA], self.experiment_state)
+                if C.EXPERIMENT_MODELS in checkpoint_block:
+                    self.experiment_state.experiment_models.checkpoint(checkpoint_block[C.EXPERIMENT_MODELS], self.experiment_state)
+                    
             else:
                 raise RuntimeError('Unknown experiment block type.')
         
