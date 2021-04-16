@@ -43,8 +43,7 @@ Creating a new dataset that can be loaded from the config requires:
 
 > dev: the base dataset functionality is located in `src/experimentlib/experiment_data.py`. However, specific kinds of datasets are managed by specific libraries based on their data type, such as `languagelib` and `programlib`.
 
-5. [TODO] Rename lapslib -> languagelib and verify language loading. THEN: see create dummy model.
-6. [TODO] Finally, implement programlib and verify task loading (of image tasks); and programs from the frontiers (just load the programs as frontiers or ground truth annotations -- we can write them out as a different kind of taskv or separate from the frontiers.)
+6. [TODO] Finally, store a cut of DreamCoder (with the binaries accessible) as a library fork, ideally with OCaml executables. Implement programlib to unwrap / wrap out the various program components. Verify task loading (of image tasks); and programs from the frontiers (just load the programs as frontiers or ground truth annotations -- we can write them out as a different kind of taskv or separate from the frontiers.)
 
 ### Experiment Models
 Experiment models of any kind (generative, discriminative) are derived from the ExperimentModel class.
